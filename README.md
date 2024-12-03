@@ -5,7 +5,7 @@ AutoCSS-GPT is a Django web application that generates CSS and HTML code from us
 ---
 
 ### Home Page 🏠
-autocssgpt/image.png
+![Home Page Screenshot](autocssgpt/image.png)
 
 ## Features 🌟
 
