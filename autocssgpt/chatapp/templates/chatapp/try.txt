@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoCSS GPT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Noto-Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a2e;
+            color: #FF5733;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            background-color: #16213e;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            width: 80%;
+            max-width: 1200px;
+            height: 70%;
+        }
+        #output {
+            background-color: #16213e; /* Match the input section's background */
+            color: #a1eafb; /* Compliments the theme */
+            border: 2px solid #e94560; /* Align with the theme's accent color */
+            border-radius: 8px; /* Smooth edges for consistency */
+            padding: 20px; /* Add some spacing */
+            font-size: 1rem; /* Maintain a readable font size */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Add subtle depth */
+            max-height: 200px; /* Prevent overflow for tall content */
+            overflow-y: auto; /* Enable scrolling for overflow */
+            margin-top: 20px; /* Add spacing from other elements */
+            text-align: left; /* Align text consistently */
+        }
+        
+        /* Content section */
+        .content-wrapper {
+            flex: 3;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #0f3460;
+        }
+
+        .welcome-section {
+            text-align: center;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            color: #e94560;
+        }
+
+        .welcome-section h2 {
+            font-size: 1rem;
+            font-family:"Helvetica";
+            color: #a1eafb;
+            margin-top: 10px;
+        }
+
+        .input-section {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .input-section textarea {
+            flex: 1;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            outline: none;
+            resize: none;
+            background-color: #16213e;
+            color: #e5e5e5;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-section button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            font-size: 1.2rem;
+            background-color: #e94560;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .input-section button:hover {
+            background-color: #ff1e4d;
+        }
+
+        /* Config section */
+        .config-section {
+            flex: 1;
+            background-color: #1a1a2e;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            border-left: 2px solid #e94560;
+        }
+
+        .config-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #a1eafb;
+        }
+
+        .config-section label {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #e5e5e5;
+            cursor: pointer;
+        }
+
+        .config-section input[type="radio"] {
+            margin-right: 10px;
+        }
+         /* Spinner styles */
+    .spinner {
+        border: 6px solid #f3f3f3; /* Light grey */
+        border-top: 6px solid #e94560; /* Red accent */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    #loadingTime {
+        color: #a1eafb;
+        margin-top: 10px;
+        font-size: 0.9rem;
+    }
+        /* Add responsiveness */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .config-section {
+                border-left: none;
+                border-top: 2px solid #e94560;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="content-wrapper">
+            <div class="welcome-section">
+                <h1>Welcome to AutoCssGPT</h1>
+                <h2>@Yugensys</h2>
+            </div>
+            {% comment %} <form class="input-section" method="POST">
+                {% csrf_token %}
+                <textarea name="user_input" placeholder="Enter input prompt here..." required></textarea>
+                <button type="submit">
+                    <span class="arrow">&#x25B6;</span>
+                </button>
+            </form> {% endcomment %}
+            <form class="input-section" method="POST" action="{% url 'generate-code' %}">
+                {% csrf_token %}
+                <textarea id="userInput" name="user_input" placeholder="Enter input prompt here..." required></textarea>
+                
+                <button type="submit">
+                    <span class="arrow">&#x25B6;</span>
+                </button>
+            </form>
+            
+        </div>
+        
+      <div class="config-section">
+            <h3>Output Configuration</h3>
+            <label><input type="radio" name="output_type" value="CSS" {% if output_type == "CSS" %}checked{% endif %}> HTML+CSS</label>
+            <label><input type="radio" name="output_type" value="SCSS" {% if output_type == "SCSS" %}checked{% endif %}> SCSS</label>
+            <label><input type="radio" name="output_type" value="LESS" {% if output_type == "LESS" %}checked{% endif %}> LESS</label>
+        </div>
+    </div>
+    <div id="loadingSpinner" style="display: none; text-align: center; margin-top: 20px;">
+        <div class="spinner"></div>
+        <p id="loadingTime"></p>
+    </div>
+    <div id="output"></div>
+    <script>
+        // Typewriter effect for placeholder
+        const placeholderText = "Enter input prompt here...";  // Placeholder text
+        const textarea = document.getElementById("userInput");
+        const spinner = document.getElementById('loadingSpinner');
+        const loadingTimeDisplay = document.getElementById('loadingTime');
+        let i = 0;
+        function typeWriter() {
+            if (i < placeholderText.length) {
+                textarea.setAttribute('placeholder', placeholderText.slice(0, i + 1));
+                i++;
+                setTimeout(typeWriter, 28); // Adjust speed here (50ms for faster typing)
+            }
+        }
+
+        // Start typewriter effect when the page loads
+        window.onload = function () {
+            textarea.placeholder = '';  // Clear the placeholder text first
+            typeWriter();
+        };
+
+        // Handle form submission using FormData instead of JSON
+        const form = document.querySelector('.input-section');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent default form submission
+    
+            const userInput = document.querySelector('[name="user_input"]').value;
+            const outputType = document.querySelector('[name="output_type"]:checked').value;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+            const formData = new FormData();
+            formData.append('user_input', userInput);
+            formData.append('output_type', outputType);
+    
+            // Show the spinner and clear output
+            spinner.style.display = 'block';
+            outputDiv.innerHTML = '';
+            loadingTimeDisplay.innerHTML = '';
+            const startTime = Date.now();
+    
+            try {
+                const response = await fetch("{% url 'generate-code' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: formData,
+                });
+    
+                const endTime = Date.now();
+                const timeTaken = ((endTime - startTime) / 1000).toFixed(2); // Time in seconds
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    outputDiv.innerHTML = data.output;
+                    loadingTimeDisplay.innerHTML = `Output generated in ${timeTaken} seconds.`;
+                } else {
+                    outputDiv.innerHTML = 'An error occurred. Please try again.';
+                    loadingTimeDisplay.innerHTML = '';
+                }
+            } catch (error) {
+                outputDiv.innerHTML = 'An error occurred. Please try again.';
+                loadingTimeDisplay.innerHTML = '';
+            } finally {
+                spinner.style.display = 'none'; // Hide spinner
+            }
+        {% comment %} form.addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const userInput = document.querySelector('[name="user_input"]').value;
+            const outputType = document.querySelector('[name="output_type"]:checked').value;
+
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            // Use FormData for proper form submission handling
+            const formData = new FormData();
+            formData.append('user_input', userInput);
+            formData.append('output_type', outputType);
+
+            const response = await fetch("{% url 'generate-code' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,  // CSRF token
+                },
+                body: formData  // Send data as FormData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('output').innerHTML = data.output;
+            } else {
+                document.getElementById('output').innerHTML =
+                    'An error occurred. Please try again.';
+            }
+        }); {% endcomment %}
+    </script>
+</body>
+</html>
